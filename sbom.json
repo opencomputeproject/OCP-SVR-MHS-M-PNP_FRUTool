@@ -1,0 +1,15 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "ocp-frutool-sbom",
+  "documentNamespace": "http://spdx.org/spdxdocs/ocp-frutool-sbom-20250825211812",
+  "creationInfo": {
+    "created": "2025-08-25T21:18:12Z",
+    "creators": [
+      "Tool: custom-python-sbom-generator-1.0"
+    ]
+  },
+  "packages": [],
+  "relationships": []
+}

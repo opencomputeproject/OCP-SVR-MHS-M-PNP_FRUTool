@@ -1,0 +1,7 @@
+{
+    "ChassisInfo" : {
+        "ChassisType": "Server",        
+        "ChassisPartNumber": "ABCDEF-012",
+        "ChassisSerialNumber": "9876543210"
+    }
+}

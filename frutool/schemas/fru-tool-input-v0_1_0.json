@@ -1,0 +1,92 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "SchemaName": "fru-tool-input",
+    "SchemaVersion": "0.1.0",
+
+    "type": "object",
+    "title": "fru-tool-input",
+    "required": [
+        "Files"
+    ],
+    "properties": {
+        "_comment": {
+            "description": "comment regarding the HPM to which the input applies",
+            "type": "string"
+        },
+        "Version": {
+            "description": "Version of this input file",
+            "type": "string"
+        },
+        "Updater": {
+            "description": "Individual who prepared this input file",
+            "type": "string"
+        },
+        "Files": {
+            "description": "Maximum temperature at which the component operates",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "Filename": {
+                        "description": "Path to a file to be included in the FRU. File index will match the one-based index of this item in the Files array. The path may be relative or absolute.",
+                        "type": "string"
+                    },
+                    "FormatIdentifier": {
+                        "description": "UUID identifying the format for the file.",
+                        "type": "string"
+                    },
+                    "FormatVersion": {
+                        "description": "Version of the format, in PLDM ver32 format.",
+                        "type": "number"
+                    },
+                    "Flags": {
+                        "description": "Flag settings for the file.",
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "Resident": {
+                                "description": "Indicates whether the file is included in the FRU binary. Default if omitted is true",
+                                "type": "boolean"
+                            },
+                            "Dynamic": {
+                                "description": "Indicates whether the file is subject to fynamic modification. Default if omitted is false",
+                                "type": "boolean"
+                            },
+                            "ChecksumPresent": {
+                                "description": "Indicates whether a CRC-32 integrity checksum for the file is included in the FRU binary. Default if omitted is true",
+                                "type": "boolean"
+                            },
+                            "Compression": {
+                                "description": "Indicates compression to be applied to the file.",
+                                "type": "string",
+                                "enum": [
+                                    "none",
+                                    "gzip",
+                                    "msgpak",
+                                    "custom"
+                                ]
+                            },
+                            "CustomCompressionUUID": {
+                                "description": "UUID for custom compression to be applied to the file.",
+                                "type": "string"
+                            },
+                            "CustomCompressionCommandLine": {
+                                "description": "Shell command to apply custom compression to the file. Input file (mandatory) is represented by %1 in the command line; output file (optional) is represented by %2 in the command line.",
+                                "type": "string"
+                            },
+                            "CustomCompressionOutputFilename": {
+                                "description": "Filename that applies when custom compression has been applied to the file. If omitted. defaults to %2 from `CustomCompressionOutputFilename (if %2 was supplied) or to the input file (if %2 was not supplied).",
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "Context": {
+                        "description": "Numeric value to supply for the Context field in the files table. Defaults to 0 if omitted.",
+                        "type": "Number"
+                    }
+                }
+            }    
+        }
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "BoardInfo" : {
+        "FactoryTimeStamp": "YYYY-MM-DDThh:mm:ss+0000",
+        "Manufacturer": "HPE",
+        "ProductName": "SuperServerBoard",
+        "SerialNumber": "01234567890000",
+        "PartNumber": "123456-123",
+        "FRUFileID": ""
+    }
+}

@@ -1,0 +1,195 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "SchemaName": "fru-tool-ipmi",
+    "SchemaVersion": "0.1.0",
+
+    "type": "object",
+    "title": "fru-tool-ipmi",
+    "required": [
+    ],
+    "properties": {
+        "_comment": {
+            "description": "comment regarding the HPM to which the input applies",
+            "type": "string"
+        },
+        "Version": {
+            "description": "Version of this input file",
+            "type": "string"
+        },
+        "Updater": {
+            "description": "Individual who prepared this input file",
+            "type": "string"
+        },
+        "BoardInfo": {
+            "description": "IPMI BoardInfo properties",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "FormatVersion": {
+                    "description": "Format version for the IPMI BoardInfo area",
+                    "type": "integer"
+                },
+                "LanguageCode": {
+                    "description": "Language code for the IPMI BoardInfo area",
+                    "type": "integer"
+                },
+                "FactoryTimeStamp": {
+                    "description": "Timestamp for when the factory manufactured the board",
+                    "type": "string"
+                },
+                "Manufacturer": {
+                    "description": "Board manufacturer",
+                    "type": "string"
+                },
+                "ProductName": {
+                    "description": "Product name for the board",
+                    "type": "string"
+                },
+                "SerialNumber": {
+                    "description": "Serial number for the board",
+                    "type": "string"
+                },
+                "PartNumber": {
+                    "description": "Part number for the board",
+                    "type": "string"
+                },
+                "FRUFileID": {
+                    "description": "File identifier for the FRU",
+                    "type": "string"
+                }
+            }
+        },
+        "ChassisInfo": {
+            "description": "IPMI ChassisInfo properties",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "FormatVersion": {
+                    "description": "Format version for the IPMI ChassisInfo area",
+                    "type": "integer"
+                },
+                "ChassisType": {
+                    "description": "Type of chassis for this FRU",
+                    "type": "string"
+                },
+                "ChassisPartNumber": {
+                    "description": "Part number for the chassis",
+                    "type": "string"
+                },
+                "ChassisSerialNumber": {
+                    "description": "Serial number for the chassis",
+                    "type": "string"
+                }
+            }
+        },
+        "ProductInfo" : {
+            "description": "IPMI ProductInfo properties",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "FormatVersion": {
+                    "description": "Format version for the IPMI ProductInfo area",
+                    "type": "integer"
+                },
+                "LanguageCode": {
+                    "description": "Language code for the IPMI ProductInfo area",
+                    "type": "integer"
+                },
+                "ManufacturerName": {
+                    "description": "Manufacturer for the product",
+                    "type": "string"
+                },
+                "ProductName": {
+                    "description": "Name of the product",
+                    "type": "string"
+                },
+                "ProductModelNumber": {
+                    "description": "Model number for the product",
+                    "type": "string"
+                },
+                "ProductVersion": {
+                    "description": "Version number for the product",
+                    "type": "string"
+                },
+                "ProductSerialNumber": {
+                    "description": "Serial number for the product",
+                    "type": "string"
+                },
+                "AssetTag": {
+                    "description": "Asset tag for the product",
+                    "type": "string"
+                },
+                "FRUFileID": {
+                    "description": "File identifier for the FRU",
+                    "type": "string"
+                }
+            }
+        },
+        "Multirecords": {
+            "description": "IPMI Multirecord definitions",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "RecordType": {
+                        "description": "RecordType for the multirecord",
+                        "type": "string",
+                        "enum": [
+                            "HPM",
+                            "PERIPHERAL"
+                        ]
+                    },
+                    "FormatVersion": {
+                        "description": "Format version for the multirecord",
+                        "type": "integer"
+                    },
+                    "SCIRevisionMajor": {
+                        "description": "Major portion of the SCI revision for an HPM multirecord",
+                        "type": "integer"
+                    },
+                    "SCIRevisionMinor": {
+                        "description": "Minor portion of the SCI revision for an HPM multirecord",
+                        "type": "integer"
+                    },
+                    "SCIVersionMajor": {
+                        "description": "Major portion of the SCI version for an HPM multirecord",
+                        "type": "integer"
+                    },
+                    "SCIVersionMinor": {
+                        "description": "Minor portion of the SCI version for an HPM multirecord",
+                        "type": "integer"
+                    },
+                    "LTPIMajorVersion": {
+                        "description": "Major portion of the LTPI version for an HPM multirecord",
+                        "type": "integer"
+                    },
+                    "LTPIMinorVersion": {
+                        "description": "Minor portion of the LTPI version for an HPM multirecord",
+                        "type": "integer"
+                    },
+                    "SCMType": {
+                        "description": "SCM type for an HPM multirecord",
+                        "type": "integer"
+                    },
+                    "HPMVendorID": {
+                        "description": "HPM vendor ID for an HPM multirecord",
+                        "type": "string"
+                    },
+                    "HPMDeviceID": {
+                        "description": "HPM device ID for an HPM multirecord",
+                        "type": "string"
+                    },
+                    "DeviceClass": {
+                        "description": "Device class for a peripheral multirecord",
+                        "type": "integer"
+                    },
+                    "DeviceSubClass": {
+                        "description": "Device subclass for a peripheral multirecord",
+                        "type": "integer"
+                    }
+                }
+            }
+        }
+    }
+}

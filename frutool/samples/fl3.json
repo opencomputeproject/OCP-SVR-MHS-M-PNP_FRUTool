@@ -1,0 +1,43 @@
+{
+    "_comment": "json file for set of files as input to DMTF FRU files image",
+    "Version": "0.0.1",
+
+    "Files": [
+        {
+            "Filename":  "samples/hpm-fru-mockup.json.gz",
+            "FormatIdentifier": "b0f252dc-31ad-413c-a42c-3bc97ccdd361",
+            "FormatVersion": 1,
+            "Flags": {
+                "Resident": true,
+                "Dynamic": false,
+                "ChecksumPresent": true,
+                "Compression": "gzip"
+            },
+            "Context": 1
+        },
+        {
+            "Filename":  "samples/example_leaf_cert_no_signature.txt.gz",
+            "FormatIdentifier": "e5d61667-66a3-4792-a088-3b0b70127efa",
+            "FormatVersion": 1,
+            "Flags": {
+                "Resident": true,
+                "Dynamic": false,
+                "ChecksumPresent": true,
+                "Compression": "gzip"
+            },
+            "Context": 2
+        },
+        {
+            "Filename":  "samples/fake_signature.bin",
+            "FormatIdentifier": "befea991-9f2b-4467-81b9-4835b1ad90f6",
+            "FormatVersion": 1,
+            "Flags": {
+                "Resident": true,
+                "Dynamic": false,
+                "ChecksumPresent": true,
+                "Compression": "None"
+            },
+            "Context": 3
+        }
+    ]
+}

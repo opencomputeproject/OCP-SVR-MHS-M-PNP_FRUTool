@@ -1,0 +1,27 @@
+{
+    "BoardInfo" : {
+        "FormatVersion": 1,
+        "LanguageCode": 0,
+        "FactoryTimeStamp": "2025-04-30T14:11:10+00:00",
+        "Manufacturer": "HPE",
+        "ProductName": "SuperServerBoard",
+        "SerialNumber": "01234567890000",
+        "PartNumber": "123456-123",
+        "FRUFileID": ""
+    },
+    "Multirecords" : [
+        {
+            "RecordType": "HPM",
+            "FormatVersion": 2,
+            "SCIRevisionMajor": 2,
+            "SCIRevisionMinor": 1,            
+            "SCIVersionMajor": 1,
+            "SCIVersionMinor": 1,            
+            "LTPIMajorVersion": 1,
+            "LTPIMinorVersion": 0,
+            "SCMType": 1,        
+            "HPMVendorID": "0x1590",
+            "HPMDeviceID": "0x0000"           
+        }
+    ]
+}

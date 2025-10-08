@@ -1,0 +1,31 @@
+{
+    "_comment": "json file for set of files as input to DMTF FRU files image",
+    "Version": "0.0.1",
+
+    "Files": [
+        {
+            "Filename":  "samples/testfile1.txt",
+            "FormatIdentifier": "a4f59e2c-b8a9-4fad-b092-41332c90e65b",
+            "FormatVersion": 1,
+            "Flags": {
+                "Resident": true,
+                "Dynamic": false,
+                "ChecksumPresent": true,
+                "Compression": "None"
+            },
+            "Context": 1
+        },
+        {
+            "Filename":  "samples/testfile2.txt",
+            "FormatIdentifier": "bb04e8da-642c-11ef-937a-088e90d7ef14",
+            "FormatVersion": 2,
+            "Flags": {
+                "Resident": true,
+                "Dynamic": false,
+                "ChecksumPresent": true,
+                "Compression": "gzip"
+            },
+            "Context": 2
+        }
+    ]
+}

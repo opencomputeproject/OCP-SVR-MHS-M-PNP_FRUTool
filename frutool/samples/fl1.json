@@ -1,0 +1,25 @@
+{
+    "_comment": "json file for set of files as input to DMTF FRU files image",
+    "SchemaName": "fru-tool-input-v0_1_0.json",
+    "SchemaVersion": "0.0.1",
+    "Version":"0.1.0",
+    "Updater":"phil",
+
+    "Files": [
+        {
+            "Filename":  "samples/testfile1.txt",
+            "FormatIdentifier": "a4f59e2c-b8a9-4fad-b092-41332c90e65b",
+            "FormatVersion": 1,
+            "Flags": {
+                "Resident": true,
+                "Dynamic": false,
+                "ChecksumPresent": true,
+                "Compression": "gzip",
+                "CustomCompressionUUID":  "",
+                "CustomCompressionCommandLine":  "",
+                "CustomCompressionOutputFilename": "" 
+            },
+            "Context": 1
+        }
+    ]
+}

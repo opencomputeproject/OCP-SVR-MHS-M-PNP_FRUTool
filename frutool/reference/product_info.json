@@ -1,0 +1,12 @@
+{
+    "ProductInfo" : {
+        "LanguageCode": "",        
+        "ManufacturerName": "HPE",
+        "ProductName": "SuperServer",
+        "ProductModelNumber": "abcdef-321",
+        "ProductVersion": "1.0",   
+        "ProductSerialNumber": "98765432100000",   
+        "AssetTag": "this is my asset tag", 
+        "FRUFileID": ""                                
+    }
+}

@@ -1,0 +1,44 @@
+{
+    "BoardInfo" : {
+        "FormatVersion": 1,
+        "LanguageCode": 0,
+        "FactoryTimeStamp": "2025-04-30T14:11:10+00:00",
+        "Manufacturer": "HPE",
+        "ProductName": "SuperServerBoard",
+        "SerialNumber": "01234567890000",
+        "PartNumber": "123456-123",
+        "FRUFileID": ""
+    },
+    "ChassisInfo" : {
+        "FormatVersion": 1,        
+        "ChassisType": "Server",        
+        "ChassisPartNumber": "ABCDEF-012",
+        "ChassisSerialNumber": "9876543210"
+    },    
+    "ProductInfo" : {
+        "FormatVersion": 1,        
+        "LanguageCode": "0",        
+        "ManufacturerName": "HPE",
+        "ProductName": "SuperServer",
+        "ProductModelNumber": "abcdef-321",
+        "ProductVersion": "1.0",   
+        "ProductSerialNumber": "98765432100000",   
+        "AssetTag": "this is my asset tag", 
+        "FRUFileID": ""                                
+    },
+    "Multirecords" : [
+        {
+            "RecordType": "HPM",
+            "FormatVersion": 2,
+            "SCIRevisionMajor": 2,
+            "SCIRevisionMinor": 1,            
+            "SCIVersionMajor": 1,
+            "SCIVersionMinor": 1,            
+            "LTPIMajorVersion": 1,
+            "LTPIMinorVersion": 0,
+            "SCMType": 1,        
+            "HPMVendorID": "0x1590",
+            "HPMDeviceID": "0x0000"           
+        }
+    ]
+}
