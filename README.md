@@ -1,9 +1,11 @@
-# OCP
-Open Compute Project information, status and files for HPE OCP participants and interested parties.
+# FRUPack.py
+FRU packaging tool to build FRU image files for use in programming EEPROMs or other FRU information devices.
+The FRU packaging tool builds images according to the M-PNP.FRU_Discovery_Boot 0.5 specification which includes both the IPMI and DMTF FRU format contents.
 
 http://opencompute.org
 
-## DC-MHS
+## Modular Hardware Systems (MHS)
+This is created as part of the M-PNP workstream efforts within Server MHS sub-project.
 
 ### Project : FruTool
 
@@ -13,5 +15,4 @@ http://opencompute.org
 ### Maintainers : Arun Koshy, Bill Scherer, Phillip Leech (lead)
 
 ## Contributors
-
-Andrew Cartes, Arun Darlie Koshy, Bill Scherer, David Heinrich, Melvin Benedict, Mike Witkowski, Phillip Leech
+Arun Darlie Koshy, Bill Scherer, Phillip Leech
