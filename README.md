@@ -17,7 +17,7 @@ This project is created as part of the **M-PNP** workstream within the **Server 
 #### Related Specifications & Talks
 
 - [OCP Tech Talk: M-PNP Overview and M-PNP FPGA 0.5 Specification Deep Dive](https://www.opencompute.org/events/past-events/ocp-tech-talk-m-pnp-overview-and-m-pnpfpga-05-specification-deep-dive)
-- [OCP Tech Talk: M-PNP FRU Discovery Boot 0.5 Specification Deep Dive](https://www.opencompute.org/events/past-events/ocp-tech-talk-m-pnpfru_discovery_boot-05-specification-deep-dive)
+- [OCP Tech Talk: M-PNP FRU Discovery Boot 0.5 Specification Deep Dive](https://www.opencompute.org/events/past-events/ocp-tech-talk-m-pnp-overview-and-m-pnpfru_discovery_boot-05-specification-deep-dive)
 
 #### Demo
 
