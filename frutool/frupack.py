@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Hewlett Packard Enterprise Development LP
+# SPDX-FileCopyrightText: 2026 Hewlett Packard Enterprise Development LP
 # SPDX-License-Identifier: MIT
 
 # FRUpack.py
@@ -500,6 +500,29 @@ def create_fru_image(dmtf_input_file, ipmi_input_file, output_file, enable_gzip=
     rc = False
 
     print("Creating FRU Image...")
+
+    # Determine schema directory relative to this script
+    schema_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "schemas")
+
+    # Validate DMTF input file against schema if provided
+    if dmtf_input_file:
+        dmtf_schema = os.path.join(schema_dir, "fru-tool-input-v0_1_0.json")
+        valid, msg = validate_json_with_schema(dmtf_input_file, dmtf_schema)
+        if not valid:
+            print(f"Schema validation error: {msg}")
+            return 1
+        if verbose:
+            print(msg)
+
+    # Validate IPMI input file against schema
+    if ipmi_input_file:
+        ipmi_schema = os.path.join(schema_dir, "fru-tool-ipmi-v0_1_0.json")
+        valid, msg = validate_json_with_schema(ipmi_input_file, ipmi_schema)
+        if not valid:
+            print(f"Schema validation error: {msg}")
+            return 1
+        if verbose:
+            print(msg)
 
     # Create the DMTF FRU image if it is present
     if dmtf_input_file:
