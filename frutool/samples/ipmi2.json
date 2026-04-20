@@ -17,7 +17,7 @@
     },    
     "ProductInfo" : {
         "FormatVersion": 1,        
-        "LanguageCode": "0",        
+        "LanguageCode": 0,        
         "ManufacturerName": "HPE",
         "ProductName": "SuperServer",
         "ProductModelNumber": "abcdef-321",
