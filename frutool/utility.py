@@ -1,12 +1,14 @@
-# SPDX-FileCopyrightText: 2025 Hewlett Packard Enterprise Development LP
+# SPDX-FileCopyrightText: 2026 Hewlett Packard Enterprise Development LP
 # SPDX-License-Identifier: MIT
 
 # Library of useful utility functions
 
+import json
 import sys
 import struct
 import zlib
 from ctypes import *    # crc16
+import jsonschema
 
 ###########################################################
 # Constants
@@ -201,6 +203,43 @@ def calculate_crc32_file(filepath, verify=False):
         return None
 
 ###############################################################################################
+
+# Validate a JSON file against a JSON schema
+def validate_json_with_schema(json_file, schema_file):
+    """
+    Validates a JSON input file against a JSON schema file.
+    Args:
+        json_file (str): Path to the JSON input file to validate.
+        schema_file (str): Path to the JSON schema file.
+    Returns:
+        tuple:
+            valid (bool): True if validation passed, False otherwise.
+            message (str): Descriptive message indicating pass or failure details.
+    """
+    try:
+        with open(json_file, "r") as f:
+            json_data = json.load(f)
+    except FileNotFoundError:
+        return False, f"Input file not found: {json_file}"
+    except json.JSONDecodeError as e:
+        return False, f"Invalid JSON in input file {json_file}: {e}"
+
+    try:
+        with open(schema_file, "r") as f:
+            schema_data = json.load(f)
+    except FileNotFoundError:
+        return False, f"Schema file not found: {schema_file}"
+    except json.JSONDecodeError as e:
+        return False, f"Invalid JSON in schema file {schema_file}: {e}"
+
+    try:
+        jsonschema.validate(instance=json_data, schema=schema_data)
+        return True, f"Validation passed: {json_file}"
+    except jsonschema.ValidationError as e:
+        return False, f"Validation failed for {json_file}: {e.message}"
+    except jsonschema.SchemaError as e:
+        return False, f"Schema error in {schema_file}: {e.message}"
+
 
 # Convert a hex string 's' to a hex number
 def hexToNum(s):
