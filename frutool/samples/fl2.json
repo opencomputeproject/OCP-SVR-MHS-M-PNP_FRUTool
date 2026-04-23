@@ -11,7 +11,7 @@
                 "Resident": true,
                 "Dynamic": false,
                 "ChecksumPresent": true,
-                "Compression": "None"
+                "Compression": "none"
             },
             "Context": 1
         },

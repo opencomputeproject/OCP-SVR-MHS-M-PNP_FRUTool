@@ -83,7 +83,7 @@
                     },
                     "Context": {
                         "description": "Numeric value to supply for the Context field in the files table. Defaults to 0 if omitted.",
-                        "type": "Number"
+                        "type": "number"
                     }
                 }
             }    
