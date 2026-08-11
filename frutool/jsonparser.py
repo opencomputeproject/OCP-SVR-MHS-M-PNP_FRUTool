@@ -114,10 +114,38 @@ def parse_chassis_info_area(ipmiJson, verbose = False):
         if chassisInfo.get('FormatVersion'):  
             formatVersion = ipmiJson["ChassisInfo"]["FormatVersion"]
 
-        if chassisInfo.get('FormatVersion'):  
+        if chassisInfo.get('ChassisType'):
             chassisTypeString = ipmiJson["ChassisInfo"]["ChassisType"]
-            if chassisTypeString == "Server":
-                chassisType = 17
+            # Map chassis type string to IPMI FRU spec Table 10 chassis type byte values.
+            # Defaults to Unknown (0x02) for any unrecognized string.
+            chassis_type_map = {
+                "Other":                  0x01,
+                "Unknown":                0x02,
+                "Desktop":                0x03,
+                "Low Profile Desktop":    0x04,
+                "Pizza Box":              0x05,
+                "Mini Tower":             0x06,
+                "Tower":                  0x07,
+                "Portable":               0x08,
+                "Laptop":                 0x09,
+                "Notebook":               0x0A,
+                "Hand Held":              0x0B,
+                "Docking Station":        0x0C,
+                "All in One":             0x0D,
+                "Sub Notebook":           0x0E,
+                "Space-saving":           0x0F,
+                "Lunch Box":              0x10,
+                "Main Server Chassis":    0x11,
+                "Server":                 0x11,
+                "Expansion Chassis":      0x12,
+                "SubChassis":             0x13,
+                "Bus Expansion Chassis":  0x14,
+                "Peripheral Chassis":     0x15,
+                "RAID Chassis":           0x16,
+                "Rack Mount Chassis":     0x17,
+            }
+            # default to Unknown (0x02) for any unrecognized string
+            chassisType = chassis_type_map.get(chassisTypeString, 0x02)
 
         if chassisInfo.get('ChassisPartNumber'):  
             chassisPartNum = ipmiJson["ChassisInfo"]["ChassisPartNumber"]

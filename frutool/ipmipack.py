@@ -79,7 +79,7 @@ def pack_ipmi_chassis_area(ipmiObj, verbose=False):
     off=0
     off += appendByteBuf(binBuf, DEFAULT_FORMAT_VERSION, off, "uchar")
     off += appendByteBuf(binBuf, int(areaSz/8), off, "uchar")
-    off += appendByteBuf(binBuf, 0x11, off, "uchar") # chassis type=MainServerChassis
+    off += appendByteBuf(binBuf, ct, off, "uchar") # chassis type from parsed JSON
 
     off += appendByteBuf(binBuf, 0xC0 | cpnSize, off, "uchar") # PartNum type / size
     off += appendByteBuf(binBuf, chassis_pn, off, "str")
