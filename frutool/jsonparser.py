@@ -99,7 +99,7 @@ def parse_chassis_info_area(ipmiJson, verbose = False):
     """
     
     formatVersion = 0
-    chassisType = 0
+    chassisType = 0x02  #Unknown by default
     chassisPartNum = ""
     chassisSerialNum = ""
     chassisAreaObj = None
