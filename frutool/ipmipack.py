@@ -176,7 +176,7 @@ def pack_ipmi_product_area(ipmiObj, verbose = False):
 
     off += appendByteBuf(binBuf, 0x01, off, "uchar")
     off += appendByteBuf(binBuf, int(areaSz/8), off, "uchar")
-    off += appendByteBuf(binBuf, 0x19, off, "uchar") #lang code=English
+    off += appendByteBuf(binBuf, languageCode, off, "uchar") #lang code
     off += appendByteBuf(binBuf, 0xC0 | len(productMfg), off, "uchar") # Type/Sz
     off += appendByteBuf(binBuf, productMfg, off, "str")
     off += appendByteBuf(binBuf, 0xC0 | len(productName), off, "uchar") # Type/Sz
@@ -283,7 +283,7 @@ def pack_ipmi_board_area(ipmiObj, verbose = False):
     off += appendByteBuf(binBuf, DEFAULT_FORMAT_VERSION, off, "uchar")
 
     off += appendByteBuf(binBuf, int(areaSz/8), off, "uchar")
-    off += appendByteBuf(binBuf, 0x19, off, "uchar") #lang code=English
+    off += appendByteBuf(binBuf, languageCode, off, "uchar") #lang code
 
     off += appendByteBuf(binBuf, (factTimeStamp&0x0000FF), off, "uchar")
     off += appendByteBuf(binBuf, (factTimeStamp&0x00FF00)>>8, off, "uchar")
