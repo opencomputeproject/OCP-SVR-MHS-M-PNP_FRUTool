@@ -58,7 +58,7 @@ def parse_board_info_area(ipmiJson, verbose = False):
         if boardInfo.get('FormatVersion'):  
             formatVersion = ipmiJson["BoardInfo"]["FormatVersion"]
 
-        if boardInfo.get('LanguageCode'):  
+        if boardInfo.get('LanguageCode') is not None:
             languageCode = ipmiJson["BoardInfo"]["LanguageCode"]
 
         if boardInfo.get('FactoryTimeStamp'):              
@@ -166,7 +166,7 @@ def parse_product_info_area(ipmiJson, verbose = False):
 
     productAreaObj = None
     formatVersion = 1
-    languageCode = ""
+    languageCode = 0
     mfgName = ""
     productName = ""
     productModelNumber = ""
@@ -185,7 +185,7 @@ def parse_product_info_area(ipmiJson, verbose = False):
         if productInfo.get('FormatVersion'):  
             formatVersion = ipmiJson["ProductInfo"]["FormatVersion"]
 
-        if productInfo.get('LanguageCode'):              
+        if productInfo.get('LanguageCode') is not None:
             languageCode = ipmiJson["ProductInfo"]["LanguageCode"]
 
         if productInfo.get('ManufacturerName'):              
