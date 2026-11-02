@@ -139,17 +139,6 @@ def build_ipmi_image(ipmi_input_file, dmtfOemRecordObj = None, verbose=False):
             print("NO HPM OR PERIPHERAL MULTIRECORD!")             
 
 
-    # Build multirecord area if OEM record exists
-    if dmtfOemRecordObj:
-        print("Creating DMTF OEM MR")
-        dmtfOemRecordObj.dmtfFruOffset = IPMI_IMAGE_SIZE_MINIMUM 
-
-        # Using oemRecord, now create the multirecord entry
-        oemRecordPacked = pack_oem_record(dmtfOemRecordObj, verbose)
-
-        if verbose:        
-            hexdump("OEM Record Bytes:",oemRecordPacked,0,len(oemRecordPacked), verbose)
-
     if verbose:
         if chassisInfoPacked:        
             print(f"Chassis Record Bytes: {len(chassisInfoPacked)}")
@@ -203,7 +192,45 @@ def build_ipmi_image(ipmi_input_file, dmtfOemRecordObj = None, verbose=False):
         print(f"Common Header Bytes: {len(header)}")
         hexdump("Common Header Bytes:",header,0,len(header), verbose)
 
-    imgBuf = ctypes.create_string_buffer(IPMI_IMAGE_SIZE_MINIMUM)
+    # Calculate the actual IPMI image size before allocating buffer
+    # Start with the multirecord area offset
+    ipmi_image_size = multiRecordAreaOffset
+
+    # Add HPM or peripheral multirecord size if present
+    if hpmMultiRecordPacked:
+        ipmi_image_size += len(hpmMultiRecordPacked)
+    elif peripheralMultiRecordPacked:
+        ipmi_image_size += len(peripheralMultiRecordPacked)
+
+    # Add OEM multirecord size if present
+    if dmtfOemRecordObj is not None:
+        ipmi_image_size += DMTF_OEM_MULTIRECORD_SIZE_MINIMUM
+
+    # Align to 8-byte boundary as per IPMI FRU specification
+    remainder = ipmi_image_size % 8
+    if remainder:
+        ipmi_image_size += (8 - remainder)
+
+    if verbose:
+        print(f"Calculated IPMI Image Size: {ipmi_image_size} bytes")
+
+    # Build multirecord area if OEM record exists
+    # Now we know the final IPMI image size, so set dmtfFruOffset correctly
+    if dmtfOemRecordObj is not None:
+        print("Creating DMTF OEM MR")
+        dmtfOemRecordObj.dmtfFruOffset = ipmi_image_size
+
+        if verbose:
+            print(f"Setting DMTF FRU Offset to: {ipmi_image_size}")
+
+        # Using oemRecord, now create the multirecord entry
+        oemRecordPacked = pack_oem_record(dmtfOemRecordObj, verbose)
+
+        if verbose:
+            hexdump("OEM Record Bytes:",oemRecordPacked,0,len(oemRecordPacked), verbose)
+
+    # Allocate image buffer with the calculated size
+    imgBuf = ctypes.create_string_buffer(ipmi_image_size)
 
     # Copy header into buffer
     imgBuf[:len(header)] = header

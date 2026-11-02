@@ -78,18 +78,175 @@ def parse_fdt_entry(fdt_data):
     
     return FdtEntry(format_id, version, size, offset, flags, context, checksum)
 
+def calculate_ipmi_image_size(image_buf, verbose=False):
+    """Calculate the actual IPMI image size by parsing the IPMI FRU structure"""
+    if len(image_buf) < 8:
+        if verbose:
+            print("Error: Image buffer too small for IPMI header")
+        return IPMI_IMAGE_SIZE_MINIMUM
+
+    # Parse IPMI common header to find area offsets
+    internal_use_offset = image_buf[1] * 8
+    chassis_offset = image_buf[2] * 8
+    board_offset = image_buf[3] * 8
+    product_offset = image_buf[4] * 8
+    multirecord_offset = image_buf[5] * 8
+
+    if verbose:
+        print(f"IPMI Header: Internal={internal_use_offset}, Chassis={chassis_offset}, Board={board_offset}, Product={product_offset}, MultiRecord={multirecord_offset}")
+
+    # Find the end of the last area
+    ipmi_end = 8  # Start with header size
+
+    # Check each area and find its end
+    if internal_use_offset > 0:
+        # Internal use area size is in the first byte of the area
+        if internal_use_offset < len(image_buf):
+            internal_size = image_buf[internal_use_offset] * 8
+            ipmi_end = max(ipmi_end, internal_use_offset + internal_size)
+
+    if chassis_offset > 0:
+        if chassis_offset + 1 < len(image_buf):
+            chassis_size = image_buf[chassis_offset + 1] * 8
+            ipmi_end = max(ipmi_end, chassis_offset + chassis_size)
+
+    if board_offset > 0:
+        if board_offset + 1 < len(image_buf):
+            board_size = image_buf[board_offset + 1] * 8
+            ipmi_end = max(ipmi_end, board_offset + board_size)
+
+    if product_offset > 0:
+        if product_offset + 1 < len(image_buf):
+            product_size = image_buf[product_offset + 1] * 8
+            ipmi_end = max(ipmi_end, product_offset + product_size)
+
+    # Parse multirecord area to find its end
+    if multirecord_offset > 0:
+        offset = multirecord_offset
+        while offset + 5 <= len(image_buf):
+            record_type = image_buf[offset]
+            format_version = image_buf[offset + 1]
+            record_length = image_buf[offset + 2]
+
+            # Calculate end of this multirecord
+            record_end = offset + 5 + record_length
+            ipmi_end = max(ipmi_end, record_end)
+
+            # Check end-of-list flag (bit 7 of format_version)
+            if format_version & 0x80:
+                break
+
+            # Move to next multirecord
+            offset = record_end
+
+    # Align to 8-byte boundary
+    remainder = ipmi_end % 8
+    if remainder:
+        ipmi_end += (8 - remainder)
+
+    if verbose:
+        print(f"Calculated IPMI image size: {ipmi_end} bytes")
+
+    return ipmi_end
+
+def parse_oem_multirecord(image_buf, verbose=False):
+    """Parse DMTF OEM multirecord to extract the DMTF FRU offset"""
+    # IPMI header is 8 bytes
+    # We need to parse the header to find the multirecord area offset
+    if len(image_buf) < 8:
+        if verbose:
+            print("Error: Image buffer too small for IPMI header")
+        return None
+
+    # Parse IPMI common header
+    # Byte 0: Format version
+    # Byte 1: Internal use area offset (in multiples of 8 bytes)
+    # Byte 2: Chassis info area offset
+    # Byte 3: Board area offset
+    # Byte 4: Product info area offset
+    # Byte 5: MultiRecord area offset
+    # Byte 6: PAD
+    # Byte 7: Checksum
+
+    multirecord_offset = image_buf[5] * 8  # Convert from 8-byte units to bytes
+
+    if multirecord_offset == 0:
+        if verbose:
+            print("No multirecord area found in IPMI header")
+        return None
+
+    if verbose:
+        print(f"MultiRecord area offset: {multirecord_offset} bytes")
+
+    # Search for DMTF OEM multirecord (type 0xC0)
+    offset = multirecord_offset
+
+    while offset + 12 <= len(image_buf):  # Minimum OEM multirecord size is 12 bytes
+        # Parse multirecord header (5 bytes)
+        record_type = image_buf[offset]
+        format_version = image_buf[offset + 1]
+        record_length = image_buf[offset + 2]
+
+        if verbose:
+            print(f"Found multirecord at offset {offset}: type=0x{record_type:02x}, length={record_length}")
+
+        # Check if this is a DMTF OEM record (type 0xC0)
+        if record_type == 0xC0:
+            # OEM record found, extract DMTF FRU offset
+            # Offset 5-7: Manufacturer ID (0x001AB4 for DMTF)
+            # Offset 8-11: DMTF FRU offset (4 bytes, little endian)
+            if offset + 12 <= len(image_buf):
+                mfg_id = struct.unpack("<I", image_buf[offset + 5:offset + 8] + b'\x00')[0]
+
+                if mfg_id == 0x001AB4:  # DMTF manufacturer ID
+                    dmtf_offset = struct.unpack("<I", image_buf[offset + 8:offset + 12])[0]
+
+                    if verbose:
+                        print(f"Found DMTF OEM multirecord: DMTF FRU offset = {dmtf_offset} bytes")
+
+                    return dmtf_offset
+
+        # Check end-of-list flag (bit 7 of format_version)
+        if format_version & 0x80:
+            if verbose:
+                print("Reached end of multirecord list")
+            break
+
+        # Move to next multirecord (header + data)
+        offset += 5 + record_length
+
+    if verbose:
+        print("DMTF OEM multirecord not found")
+
+    return None
+
 def extract_ipmi_section(image_buf, verbose=False):
-    """Extract IPMI FRU section from the image"""
+    """Extract IPMI FRU section from the image using dynamic size detection"""
     if verbose:
         print("Extracting IPMI FRU section...")
 
+    # First, try to parse the OEM multirecord to get the DMTF FRU offset
+    # This is the most accurate method when a DMTF section exists
+    dmtf_offset = parse_oem_multirecord(image_buf, verbose)
+
+    if dmtf_offset is not None and dmtf_offset > 0:
+        # Use the DMTF offset from the OEM multirecord as the IPMI size
+        ipmi_size = dmtf_offset
+        if verbose:
+            print(f"Using IPMI size from OEM multirecord: {ipmi_size} bytes")
+    else:
+        # No OEM multirecord found, calculate size by parsing IPMI structure
+        ipmi_size = calculate_ipmi_image_size(image_buf, verbose)
+        if verbose:
+            print(f"Using calculated IPMI size: {ipmi_size} bytes")
+
     # IPMI section starts at the beginning of the image buffer
-    ipmi_buf = image_buf[:IPMI_IMAGE_SIZE_MINIMUM]
+    ipmi_buf = image_buf[:ipmi_size]
 
     if verbose:
         hexdump("IPMI FRU Section:", ipmi_buf, 0, min(64, len(ipmi_buf)), verbose)
 
-    return ipmi_buf
+    return ipmi_buf, ipmi_size
 
 def extract_dmtf_section(image_buf, ipmi_size, verbose=False):
     """Extract DMTF FRU section from the image"""
@@ -358,18 +515,22 @@ def main():
 
     extraction_results = []
 
-    # Extract IPMI section
+    # Extract IPMI section with dynamic size detection
     if not args.skip_ipmi:
-        ipmi_buf = extract_ipmi_section(image_buf, args.verbose)
+        ipmi_buf, ipmi_size = extract_ipmi_section(image_buf, args.verbose)
         ipmi_output = os.path.join(args.output, "ipmi_section.bin")
         with open(ipmi_output, "wb") as f:
             f.write(ipmi_buf)
 
         print(f" IPMI section extracted to {ipmi_output} ({len(ipmi_buf)} bytes)")
+    else:
+        # If skipping IPMI extraction, try to determine size for DMTF extraction
+        dmtf_offset = parse_oem_multirecord(image_buf, args.verbose)
+        ipmi_size = dmtf_offset if dmtf_offset else IPMI_IMAGE_SIZE_MINIMUM
 
     # Extract DMTF section and files
     if not args.skip_dmtf:
-        dmtf_buf = extract_dmtf_section(image_buf, IPMI_IMAGE_SIZE_MINIMUM, args.verbose)
+        dmtf_buf = extract_dmtf_section(image_buf, ipmi_size, args.verbose)
         dmtf_output = os.path.join(args.output, "dmtf_section.bin")
         with open(dmtf_output, "wb") as f:
             f.write(dmtf_buf)
